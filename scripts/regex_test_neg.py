@@ -3,7 +3,7 @@
 """
   This program generates random text that matches a given regex-pattern.
   The pattern is given via sys.argv and the generated text is passed to
-  the binary 'tests/test_rand' to check if the generated text also matches
+  the binary 'bin/test_rand' to check if the generated text also matches
   the regex-pattern in the C implementation.
   The exit-code of the testing program, is used to determine test success.
 
@@ -18,7 +18,7 @@ import random
 from subprocess import call
 
 
-prog = "./tests/test_rand_neg"
+prog = "./bin/test_rand_neg"
 
 if len(sys.argv) < 2:
   print("")
@@ -60,23 +60,17 @@ def gen_no_match(pattern, minlen=1, maxlen=50, maxattempts=500):
 
 
 while repeats >= 0:
-  try:
     repeats -= 1
     example = gen_no_match(pattern)
     #print("%s %s %s" % (prog, pattern, example))
-    ret = call([prog, "\"%s\"" % pattern, "\"%s\"" % example])
+    ret = call([prog, pattern, example])
     if ret != 0:
       escaped = repr(example) # escapes special chars for better printing
       print("    FAIL : matches %s unexpectedly [%s]." % (escaped, ", ".join([("0x%02x" % ord(e)) for e in example]) ))
       nfails += 1
 
-  except:
-    #import traceback
-    #print("EXCEPTION!")
-    #raw_input(traceback.format_exc())
-    ntests -= 1
-    repeats += 1
-    #nfails += 1
-
 sys.stdout.write("%4d/%d tests succeeded \n" % (ntests - nfails, ntests))
 #print("")
+
+if nfails != 0:
+  sys.exit(1)

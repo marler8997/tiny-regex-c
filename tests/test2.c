@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "re.h"
+#include "re_deprecated.h"
 
 
 char buf[] = {
@@ -2085,7 +2086,7 @@ int main()
 
     printf("  matching on %lu bytes of test input: ", bufsizes[i]);
     fflush(stdout);
-    printf("%d \n", re_match(".+nonexisting.+", buf, &dummy));
+    printf("%d \n", re_match_deprecated(".+nonexisting.+", buf, &dummy));
 
     buf[bufsizes[i]] = old;
   }

@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include "re.h"
+#include "re_deprecated.h"
 
 
 int main(int argc, char** argv)
@@ -18,7 +19,7 @@ int main(int argc, char** argv)
   int length;
   if (argc == 3)
   {
-    int m = re_match(argv[1], argv[2], &length);
+    int m = re_match_deprecated(argv[1], argv[2], &length);
     if (m == -1)
       return 0;
   }

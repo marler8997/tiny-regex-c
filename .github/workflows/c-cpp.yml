@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ nocompile ]
   pull_request:
-    branches: [ master ]
+    branches: [ nocompile ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -16,9 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: make clean
-      run: make clean
-    - name: make all
-      run: make all
+    - name: make test_all_make_targets
+      run: make test_all_make_targets
     - name: make test
-      run: make test
+      run: make -j$(nproc) test

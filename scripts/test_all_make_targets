@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -e
+
+enforce_clean() {
+    msg=$1
+    if git status --porcelain | grep "??" ; then
+        echo $msg
+        exit 1
+    fi
+}
+
+er() {
+    echo "$@"
+    "$@"
+}
+
+set -e
+
+enforce_clean "Cannot start the test unless the repo is clean of untracked files"
+
+make_targets=(
+    # builds all binary files
+    all
+    # individual binary files
+    bin/test1
+    bin/test1_cstr
+    bin/test3
+    bin/test3_cstr
+    bin/test3_newline
+    bin/test3_size_t
+    bin/test2
+    bin/test2_cstr
+    bin/test_rand
+    bin/test_rand_neg
+    # individual tests
+    test1
+    test1_cstr
+    test3
+    test3_cstr
+    test3_newline
+    test3_size_t
+    test2
+    test2_cstr
+    test_rand
+    test_rand_neg
+    # all tests
+    test
+)
+
+echo make targets is "${make_targets[@]}"
+for target in "${make_targets[@]}"; do
+    echo "--------------------------------------------------------------------------------"
+    echo "Testing make target: $target"
+    echo "--------------------------------------------------------------------------------"
+    er make $target NRAND_TESTS=1
+    er make clean
+    enforce_clean "make clean did not clean files"
+    # really make sure we're clean
+    er git clean -xffd
+done

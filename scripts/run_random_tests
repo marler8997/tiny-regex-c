@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+import sys
+import os
+import re
+from subprocess import call
+
+def escape_shell_arg(arg):
+    if re.match("^[a-zA-Z0-9/\.\-_]+$", arg):
+        return arg
+    return "'" + arg.replace("$", "$$") + "'"
+
+def read_tests(filename):
+    patterns = []
+    with open(filename, "r") as file:
+        for line in file:
+            line = line.rstrip()
+            if len(line) == 0 or line.startswith("###"):
+                continue
+            patterns.append(line.rstrip())
+    return patterns
+
+def main(cmd_args):
+    if len(cmd_args) != 3:
+        sys.exit("Usage: run_random_tests TEST_SCRIPT_PY PATTERN_FILE COUNT")
+    test_script = cmd_args[0]
+    pattern_file = cmd_args[1]
+    count = cmd_args[2]
+
+    for pattern in read_tests(pattern_file):
+        args = [sys.executable, test_script, pattern, str(count)]
+        #print(" ".join([escape_shell_arg(arg) for arg in args]))
+        result = call(args)
+        if result != 0:
+            sys.exit("{}: failed for pattern: {}".format(test_script, pattern))
+
+main(sys.argv[1:])

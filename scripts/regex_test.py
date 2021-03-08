@@ -54,8 +54,8 @@ sys.stdout.write("%-35s" % ("  pattern '%s': " % pattern))
 
 
 while repeats >= 0:
+  repeats -= 1
   try:
-    repeats -= 1
     example = exrex.getone(pattern)
     #print("%s %s %s" % (prog, pattern, example))
     ret = call([prog, "\"%s\"" % pattern, "\"%s\"" % example])
@@ -69,7 +69,6 @@ while repeats >= 0:
     #print("EXCEPTION!")
     #raw_input(traceback.format_exc())
     ntests -= 1
-    repeats += 1
     #nfails += 1
 
 sys.stdout.write("%4d/%d tests succeeded \n" % (ntests - nfails, ntests))

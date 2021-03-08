@@ -60,8 +60,8 @@ def gen_no_match(pattern, minlen=1, maxlen=50, maxattempts=500):
 
 
 while repeats >= 0:
+  repeats -= 1
   try:
-    repeats -= 1
     example = gen_no_match(pattern)
     #print("%s %s %s" % (prog, pattern, example))
     ret = call([prog, "\"%s\"" % pattern, "\"%s\"" % example])
@@ -75,7 +75,6 @@ while repeats >= 0:
     #print("EXCEPTION!")
     #raw_input(traceback.format_exc())
     ntests -= 1
-    repeats += 1
     #nfails += 1
 
 sys.stdout.write("%4d/%d tests succeeded \n" % (ntests - nfails, ntests))
